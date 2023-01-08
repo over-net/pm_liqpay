@@ -51,9 +51,9 @@ final class pm_liqpay extends PaymentRoot
     {
         $doc = self::$app->getDocument();
         $style = "
-			[value=pm_liqpay]+label * { height: 48px; vertical-align: middle; display:inline-block; }
-			[value=pm_liqpay]+label .payment_image{ margin-right: 5px; display: inline-block; }
-		";
+		[value=pm_liqpay]+label * { height: 48px; vertical-align: middle; display:inline-block; }
+		[value=pm_liqpay]+label .payment_image{ margin-right: 5px; display: inline-block; }
+	";
         $doc->addStyleDeclaration($style);
 
     }
@@ -81,9 +81,11 @@ final class pm_liqpay extends PaymentRoot
     public function showEndForm($pmconfigs, $order)
     {
         $jshopConfig = \JSFactory::getConfig();
-		$itemId = $pmconfigs['return_item_id'] ?? null;
+	$itemId = $pmconfigs['return_item_id'] ?? null;
+	$lang = self::language();
 
         echo JText::_('JSHOPPING_ADDON_PM_LIQPAY_REDIRECTING_MESSAGE');
+	    
 
         echo $this->liqpay($pmconfigs['public_key'], $pmconfigs['private_key'])->cnb_form([
             'id' => 'liqpay_form',
@@ -93,7 +95,7 @@ final class pm_liqpay extends PaymentRoot
             'currency' => $pmconfigs['currency'],
             'description' => JText::sprintf('JSHOPPING_ADDON_PM_LIQPAY_ORDER_DETAILS', $order->order_number, $jshopConfig->shop_name),
             'order_id' => $order->order_id,
-            'result_url' => JUri::root() . "index.php?option=com_jshopping&controller=checkout&task=step7&act=return&js_paymentclass=pm_liqpay&Itemid={$itemId}&lang=uk&order_id={$order->order_id}",
+            'result_url' => JUri::root() . "index.php?option=com_jshopping&controller=checkout&task=step7&act=return&js_paymentclass=pm_liqpay&Itemid={$itemId}&lang={$lang}&order_id={$order->order_id}",
             'server_url' => JUri::root() . "index.php?option=com_jshopping&controller=checkout&task=step7&act=notify&js_paymentclass=pm_liqpay&no_lang=1&order_id={$order->order_id}",
             'version' => LiqPayPayment::VERSION
         ]);
