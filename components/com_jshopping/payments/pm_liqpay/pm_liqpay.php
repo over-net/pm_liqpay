@@ -83,6 +83,7 @@ final class pm_liqpay extends PaymentRoot
         $jshopConfig = \JSFactory::getConfig();
 	$itemId = $pmconfigs['return_item_id'] ?? null;
 	$lang = self::language();
+	$doc = self::$app->getDocument();
 
         echo JText::_('JSHOPPING_ADDON_PM_LIQPAY_REDIRECTING_MESSAGE');
 	    
@@ -99,6 +100,17 @@ final class pm_liqpay extends PaymentRoot
             'server_url' => JUri::root() . "index.php?option=com_jshopping&controller=checkout&task=step7&act=notify&js_paymentclass=pm_liqpay&no_lang=1&order_id={$order->order_id}",
             'version' => LiqPayPayment::VERSION
         ]);
+	    
+	$script = "
+	jQuery( document ).ready(function() {
+		setTimeout(
+			jQuery('#liqpay_form').submit(), 
+		1000);
+	});
+	";
+
+	$doc->addScriptDeclaration($script);
+	    
     }
 
 
